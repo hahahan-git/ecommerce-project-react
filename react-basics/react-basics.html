@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>React Basics</title>
+</head>
+
+<body>
+  <div class="js-container"></div>
+
+  <script src="https://unpkg.com/supersimpledev/react.js"></script>
+  <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+  <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+  <!-- 
+    Babel is a javascript compiler
+    sederhananya, dia nerjemahin code yang ditulis dengan reactjs, menjadi js biasa, agar bisa dibaca oleh browser pada umumnya
+    -->
+  <script type="text/babel">
+    let name = "Reyhan";
+    const button = <button>{name}</button>;
+    const paragraph = <p>{name}</p>;
+
+    // react tidak bisa menggabungkan beberapa element secara langsung, kecuali kalau dimasukin kedalam satu container atau div.
+    const div = (// kayannya kalau pake bracket gini kita bisa bikin code nya lebih rapih, lebih bersih.
+      <div>
+        {button}
+        {paragraph}
+        {`2+2= ${2 + 2}`}
+        <p>{2 + 2}</p>
+      </div>
+    );
+
+    //ternyata kita emang bisa insert javascript code ke dalam jsx element(yang kaya html itu), dengan cara pake curly bracket'{}'. 
+
+    const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(div);
+  </script>
+
+  <!-- <script src="react-basics.js" type="module"></script> -->
+</body>
+
+</html>

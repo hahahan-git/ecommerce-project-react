@@ -1,0 +1,27 @@
+/* file ini buat style App correlated(buat App doang) */
+.position-switcher {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  color: rgb(25, 135, 84);
+  text-decoration: underline;
+  transition: .2s ease-in-out;
+  user-select: none;
+}
+
+.position-switcher:hover {
+  color: rgba(48, 48, 48, 0.726);
+  text-decoration: none;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-inline: auto;
+}

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot
+  </title>
+
+  <style>
+    *,
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .chatInput {
+      display: flex;
+      margin: 20px 0;
+      gap: 10px;
+    }
+
+    .input-chatInput {
+      flex-grow: 1;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border-width: 1px;
+      font-size: 15px;
+    }
+
+    .btn-chatInput {
+      background-color: rgb(25, 135, 84);
+      color: white;
+      border: none;
+      padding: 13px 20px;
+      font-size: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .chat-messages {
+      margin-top: 10px;
+      flex-grow: 1;
+      overflow: scroll;
+      scrollbar-width: none;
+    }
+
+
+    .user-message,
+    .bot-message {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .user-message {
+      justify-content: end;
+    }
+
+    .bot-message {
+      justify-content: start;
+    }
+
+    .text-message {
+      background-color: rgb(238, 238, 238);
+      padding: 15px 20px;
+      border-radius: 10px;
+      max-width: 300px;
+    }
+
+    .chat-messages-profile {
+      width: 50px;
+    }
+
+    .position-switcher {
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      color: rgb(25, 135, 84);
+      text-decoration: underline;
+      transition: .2s ease-in-out;
+      user-select: none;
+    }
+
+    .position-switcher:hover {
+      color: rgba(48, 48, 48, 0.726);
+      text-decoration: none;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 600px;
+      height: 100vh;
+      max-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-inline: auto;
+    }
+
+    .empty-message-text {
+      color: rgb(120, 120, 120);
+      text-align: center;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .loading-gif {
+      height: 40px;
+      margin: -15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="js-container"></div>
+
+  <script src="https://unpkg.com/supersimpledev/react.js"></script>
+  <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+  <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
+  <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+  <script type="text/babel">
+
+    function ChatInput({ chatMessages, setChatMessages }) {
+
+      const [inputText, setInputText] = React.useState('')
+      const [loading, setLoading] = React.useState('');
+
+      function saveInputText(event) {
+        if (loading === "loading") {
+          setInputText('');
+          return;
+        }
+        setInputText(event.target.value);
+      }
+
+      async function sendMessage() {
+        //chatMessages dan setChatMessages didaptkan setalah lifting the state up
+
+        if (loading === 'loading' || inputText === '') return;
+
+        const newMessage = [
+          ...chatMessages,
+          {
+            message: inputText,
+            sender: 'user',
+            id: crypto.randomUUID()
+          }
+        ];
+
+        setChatMessages(newMessage); //saving our new message
+        setChatMessages([ //for loading apperance
+          ...newMessage,
+          {
+            message: <img src="assets/gif/loading-spinner.gif" className="loading-gif" />,
+            sender: 'bot',
+            id: crypto.randomUUID()
+          }
+        ]);
+
+        setInputText('');
+        setLoading('loading');
+        const response = await Chatbot.getResponseAsync(inputText)//response we get from external library
+        setLoading('');
+
+        setChatMessages([
+          ...newMessage, // adding a response after our new chat saved
+          {
+            message: response,
+            sender: 'bot',
+            id: crypto.randomUUID()
+          }
+        ]);
+      }
+
+      function sendByEnter(event) {
+        event.key === "Enter" && sendMessage();
+        event.key === "Escape" && setInputText('');
+      }
+
+      return (
+        <div className="chatInput">
+          <input
+            placeholder="Type a message"
+            size="30"
+            onChange={saveInputText}
+            onKeyDown={sendByEnter}
+            value={inputText}
+            className="input-chatInput"
+          />
+          <button
+            onClick={sendMessage}
+            className="btn-chatInput"
+          >Send</button>
+        </div>
+      )
+    };
+
+    function ChatMessage({ message, sender }) {
+      // const { message, sender } = props; ==>>destructured directly in the parameter
+      /*
+      const userMessage = (
+        <div>
+          {message}
+          <img src="assets/images/user.png" alt="userPicture" width="50" />
+        </div>
+      );
+
+      const botMessage = (
+        <div>
+          <img src="assets/images/robot.png" alt="userPicture" width="50" />
+          {message}
+        </div>
+      );
+
+      return sender === "user" ? userMessage : botMessage;
+      // if (sender === "bot") return botMessage; return userMessage;
+      */
+
+      return (
+        <div className={sender === "bot" ? "bot-message" : "user-message"}>
+          {sender === "bot" && (
+            <img src="assets/images/robot.png" className="chat-messages-profile" />
+          )}
+          <span className="text-message">{message}</span>
+          {sender === "user" && (
+            <img src="assets/images/user.png" className="chat-messages-profile" />
+          )}
+        </div>
+
+      )
+    };
+
+    //best practice is rendering this using component
+    /*
+      const app = (
+        <>
+          <ChatInput />
+          <ChatMessage
+            message="Hello chatbox"
+            sender="user"
+          />
+          <ChatMessage
+            message="Hello! How can i help you?"
+            sender="bot"
+          />
+          <ChatMessage
+            message="Can you get me todays date?"
+            sender="user"
+          />
+          <ChatMessage
+            message="Today is September 27"
+            sender="bot"
+          />
+        </>
+      );
+    */
+
+    function ChatMessages({ chatMessages }) {
+
+      //state di pindahkan ke cabang atau component yang lebih atas yaitu App, agar bisa digunakan di ChatMessages dan ChatInput
+      /*
+        const [chatMessages, setChatMessages] = React.useState([{
+          message: 'Hello chatbox',
+          sender: 'user',
+          id: 'id1'
+        },
+        {
+          message: 'Hello! How can i help you?',
+          sender: 'bot',
+          id: 'id2'
+        },
+        {
+          message: 'Can you get me todays date?',
+          sender: 'user',
+          id: 'id3'
+        },
+        {
+          message: 'Today is September 27',
+          sender: 'bot',
+          id: 'id4'
+        }])
+      */
+      /*
+        const chatMessages = array[0]; //berisi initial data
+        const setChatMessages = array[1]; // berisi function yang akan digunakan untuk update data, naming-nya biasanya make 'set' lalu nama initial data nya.  
+      */
+
+      // kita pake shortcut array destructuring
+      // const [chatMessages, setChatMessages] = array; // order matters
+      // we can directly destructuring it
+
+      // gini bisa
+
+      // return chatMessages.map((chatMessage) => {
+      //   return (
+      //     <ChatMessage
+      //       message={chatMessage.message}
+      //       sender={chatMessage.sender}
+      //       key={chatMessage.id}
+      //     />
+      //   )
+      // })
+
+      //gini juga
+      /*
+      const chatMessagesRef = React.useRef(null);
+
+      React.useEffect(() => {
+        const containerElem = chatMessagesRef.current;
+        if (containerElem) {
+          containerElem.scrollTop = containerElem.scrollHeight; // jauh scroll = setinggi element
+        }
+      }, [chatMessages]);// [chatMessage]==>> Dependency Array : control when useEffect runs
+*/
+
+      function useAuroScroll(dependencies) {//dependencies buat dependency array, karena harus diambil dari luar.
+        const chatMessagesRef = React.useRef(null);
+
+        React.useEffect(() => {
+          const containerElem = chatMessagesRef.current;
+          if (containerElem) {
+            containerElem.scrollTop = containerElem.scrollHeight;
+          }
+        }, [dependencies]);
+
+        return chatMessagesRef;// direturn jadi chatMessagesRef karena akan dipakai diluar hook ini nantinya
+      };
+
+      const chatMessagesRef = useAuroScroll(chatMessages);
+      return (
+        <div
+          className="chat-messages"
+          ref={chatMessagesRef}
+        >
+          {chatMessages.length === 0 ? (
+            <p className="empty-message-text">
+              Welcome to the chatbot project! Send a message using the textbox below.
+            </p>
+          ) : chatMessages.map((chatMessage) => {
+            return (
+              <ChatMessage
+                message={chatMessage.message}
+                sender={chatMessage.sender}
+                key={chatMessage.id}
+              />
+            )
+          })}
+        </div>
+      )
+
+    }
+
+    function App() {
+      const [chatMessages, setChatMessages] = React.useState([])
+
+      // state diatas kita simpan didalam props agar bisa digunakan di kedua component(ChatInput & ChatMessages)
+
+
+      const [textBoxPosition, setTextBoxPosition] = React.useState('bottom')
+
+      function moveTop() {
+        setTextBoxPosition('top')
+      }
+      function moveBottom() {
+        setTextBoxPosition('bottom')
+      }
+
+      return textBoxPosition === "bottom" ? (
+        <div className="app-container">
+          {<ChatMessages
+            chatMessages={chatMessages}
+          />}
+          <ChatInput
+            chatMessages={chatMessages}
+            setChatMessages={setChatMessages}
+          />
+
+          <a className="position-switcher" onClick={moveTop} >Move textbox to top</a>
+        </div>
+      ) : (
+        <div className="app-container">
+          <ChatInput
+            chatMessages={chatMessages}
+            setChatMessages={setChatMessages}
+          />
+
+          <a className="position-switcher" onClick={moveBottom} >Move textbox to bottom</a>
+          <ChatMessages
+            chatMessages={chatMessages}
+          />
+        </div>
+      );
+    }
+
+    const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(<App />);
+
+
+  </script>
+</body>
+
+</html>
+
+<!--
+My note:)
+COMPONENTS
+Components: piece of the website ==>> misalnya di chatbot ada input-chatbox, ada chat-messagebox(isinya, baik yang kita kirim maupun yang balesan) 
+
+closing tag: 1. <input></input>, 2.<input/> ==>> 1:normal closing tag, 2==>> self-closing tag.
+
+component syntax: <ChatInput></ChatInput> ==>> (kita kaya bikin element HTML sendiri, dengan menggunakan components, ini main idea of react)
+
+fragment: <></> ==>> jadi kalau kita ga mau ada div lagi yang ngebungkus element-element yang mau dibuat, kita bisa pake fragment.
+___________________________________________________________________________________________________________
+PROPS
+props: setiap component function punya 1 parameter yang namanya "props".
+==>> props adalah sebuah object yang berisi semua atribut yang kita berikan pada sebuah component (lihat contoh di component chatMessage).
+
+funfact about "props"(mungkin), props itu kependekan dari properties, karena atribut yang kita tambahkan disimpan sebagai properties didalam object props. 
+
+best practice, using component to creat every single piece of the website, (bukan pake const atau let) 
+
+setiap component yang di buat menggunakan array harus memiliki 'key' props yang unik, agar react bisa ngetracking component mana yang dimodifikasi / element mana yang di modifikasi, jadi ga perlu render ulang seluruh array atau seluruh list.
+
+cara yang biasa digunakan untuk membuat "key" atau Unique Id, menggunakan crypto.randomUUID() (jadi kaya id gitu lah ), id ini harus dibuat atau ditetapkan(di-assign) saat data dibuat atau dimasukkan, bukan saat proses render, karena nanti bisa aja berubah.
+___________________________________________________________________________________________________________
+STATE
+"state" is for interactivity, let us add new chat messages to our web.
+state: data that is connected to the HTML, update data can update the HTML 
+state: React.useState() ==>> adalah array "[]", isinya 1.initial data (data awal yang kita masukkan/current data), 2. function yang ditujukan untuk meng-upadate data(updater function).
+ketika updating data, kita tidak menambahkan data directly dari sumbernya, tapi=> copy seluruh initial data, baru ditambahkan data baru.
+
+how to copy the data? (...) ==>> tiga titik ini digunakan untuk coping data.
+setelah data di update, data ini dijadikan sebagai data initial(dipindahin ke array[0], atau menggantikannya, gitulah pokoknya), metode (...) umum dan sering dipakai di reactjs(katanya)
+___________________________________________________________________________________________________________
+ARRAY DESTRUCTURING
+kaya destructuring pada umumnya, order matters, urutan pertama berarti jadi value pertama.
+[pertama, kedua,ketiga] = array; ==>> pertama = array[0]; kedua = array[1]; ketiga = array[2];
+___________________________________________________________________________________________________________
+LIFTING THE STATE UP (mengangkat derajat owkowkk)
+we lifting the state to upper components,
+
+agar suatu state bisa digunakan di dua atau lebih component,  kita akali dengan meletakkan state di component yang lebih atas.
+in this case kita punya App=>|ChatInput|ChatMessages=>||ChatMessage(banyak)|
+seperti pohon yang bercabang, App bisa memberikan akses ke kedua component cabangnya, jadi state nya kita taro di App, kemudian di simpan menggunakan "props" agar bisa diakses masing-masing components
+___________________________________________________________________________________________________________
+CONTROLLED INPUTS
+input punya atribute yang bisa mengontrol isi atau value dari input itu, this atribute called "value".
+so in our case, we can assign the inputText as a value of our input value.
+
+jadi kalau kita rubah si input text (make setInputText dari React.useState() ), maka value inputnya juga berubah. kalau kita rubah value nya, input textnya juga berubah(make saveInputText)
+___________________________________________________________________________________________________________
+GET THE RESPONSE
+we using an external library for the response.
+how to display it on our page?, sama aja kaya tadi, but make sure we save our chat first.
+
+karena state ga bakal ke update immediately(ga langsung update, jadi beres dulu semua code dalam satu function baru dia ngeupdate)
+
+jadi save our newchat array,lalu array itu kita gunakan untuk menambahkan response dari bot, jadi bot ga langsung nambahin dari sumber awal(sumber yang sama dengan yang kita pake buat newchat(chatMessages)), karena ketika function berjalan chatMessage nya(isinya masih sama, dan belum nambahin chat baru kita, kalau kita langsung duplikasi chatMessages itu, chat baru kita ga bakal kedisplay. gitu lah intinya)
+___________________________________________________________________________________________________________
+STYLING CSS with Reactjs
+ class: cara memberikan class pada sebuah element "className" ==>> karena jsx itu sebenarnya javaScript, jadi kita ga bisa pake "class" aja langsung, karena class udah ada di js  (reserved word / udah punya makna sendiri),
+
+ element inside a flexbox will stretch vertically by default
+
+ cara bikin input text tetap di bawah atau diatas tapi isi message nya bisa di scroll: pake "overflow:scroll;"
+ cara menghilangkan scrollbar di sisi kanan dan bawah: scrollbar-width:none;
+___________________________________________________________________________________________________________
+HOOK reactjs
+Hook : biasanya ada di external library atau framework.
+Hook react ada beberap, dan selalu dimulai dengan use:
+1.useState:
+
+2.useEffect: run code after the component is created or updated.
+Best Practice==>> memberikan "dependency array"(kalau disini, itu contohnya di [chatMessage] di component ChatMessages) pada useEffect, biar tidak keseringan runing codenya. 
+
+di js biasa kita pake DOM buat ngambil satu element di html, tapi kalau di react kita pake ".useRef()".
+
+3.useRef: saving an html element from the component.
+ref=> container with spesial react features
+cara ngambil element html menggunakan useRef=> berikan atribut(atau props lebih tepatnya) khusus "ref" pada element yang mau diambil berikan value berupa .useRef() yang sudah disimpan dalam sebuah variable, dan jangan lupa set initial value
+
+
+4.andmore.
+ 
+hook harus diletakkan di atas, di dalam sebuah component, dan tidak boleh berada didalam  
+
+cara bikin chat otomatis show chat baru ketika ada chat baru(langsung nge scroll ke bawah);
+.scrollTop : seberapa jauh dari atas yang discroll,
+.scrollHeight: total height of the element
+
+more Information: kita bisa bikin "hook" kita sendiri(custom hooks). nama hook function harus selalu diawali dengan "use" (contohnya mau bikin auto scroll ==> useAutoScroll).
+
+
+___________________________________________________________________________________________________________
+new information for me ==>> div, p are block element. (block element take up an entire line by itself)
+guard opereator(&& = AND ==>> bisa dipake untuk pengganti if (conditional) dan biasa dipakai di react)
+-->
