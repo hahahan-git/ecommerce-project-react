@@ -1,5 +1,5 @@
 import './OrderPage.css'
-import { Header } from './Header'
+import { Header } from '../../components/Header'
 
 export function OrderPage() {
   return (
@@ -7,10 +7,10 @@ export function OrderPage() {
       <title>Orders</title>
 
       <Header />
-      
+
       <div className="orders-page">
         <div className="page-title">Your Orders</div>
-
+ 
         <div className="orders-grid">
           <div className="order-container">
 

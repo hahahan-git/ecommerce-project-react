@@ -1,4 +1,5 @@
-import './header.css'
+import { Link } from 'react-router'
+import './Header.css'
 // disini logo dan lainnya (assets related) get from public
 
 export function Header() {
@@ -6,12 +7,12 @@ export function Header() {
     <>
       <div className="header">
         <div className="left-section">
-          <a href="/" className="header-link">
+          <Link to="/" className="header-link">
             <img className="logo"
               src="images/logo-white.png" />
             <img className="mobile-logo"
               src="images/mobile-logo-white.png" />
-          </a>
+          </Link>
         </div>
 
         <div className="middle-section">
@@ -23,18 +24,27 @@ export function Header() {
         </div>
 
         <div className="right-section">
-          <a className="orders-link header-link" href="/order">
+          <Link className="orders-link header-link" to="/order">
 
             <span className="orders-text">Orders</span>
-          </a>
+          </Link>
 
-          <a className="cart-link header-link" href="/checkout">
+          <Link className="cart-link header-link" to="/checkout">
             <img className="cart-icon" src="images/icons/cart-icon.png" />
             <div className="cart-quantity">3</div>
             <div className="cart-text">Cart</div>
-          </a>
+          </Link>
         </div>
       </div>
     </>
   )
 }
+
+/*NB:
+<a></a> =>> will reload the page by default
+we will use "<Link></Link>". provided by react-router
+kita akan ganti "a" dengan "Link" (untuk pindah page)
+"href" => "to"
+
+sebenarnya kita pakai javascript. cuma udah dijadiin component aja(kayanya)
+*/

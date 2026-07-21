@@ -1,5 +1,5 @@
 import './TrackingPage.css'
-import { Header } from './Header'
+import { Header } from '../../components/Header'
 
 export function TrackingPage() {
   return (
@@ -48,3 +48,4 @@ export function TrackingPage() {
     </>
   )
 }
+

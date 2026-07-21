@@ -1,11 +1,10 @@
-
 import './HomePage.css'
 //header images
 
 //Home or products images
 import sock from '../assets/images/products/athletic-cotton-socks-6-pairs.jpg'
 //anyway, if we put file on public folder, we can acces this file or folder from everywhere. misalnya images/ratings/blablabla, vite bakalan ngeliat folder "images" yang ada di public 
-import { Header } from './Header'
+import { Header } from '../components/Header'
 
 export function HomePage() {
   return (
