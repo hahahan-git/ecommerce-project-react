@@ -4,11 +4,15 @@ import './HomePage.css'
 //Home or products images
 import sock from '../assets/images/products/athletic-cotton-socks-6-pairs.jpg'
 //anyway, if we put file on public folder, we can acces this file or folder from everywhere. misalnya images/ratings/blablabla, vite bakalan ngeliat folder "images" yang ada di public 
+//here, we use it for favicon(icon di tab), and others
+
 import { Header } from '../components/Header'
 
 export function HomePage() {
   return (
     <>
+
+      <link rel="icon" href="home-favicon.png" />
       <title>Home Page</title>
 
       <Header />

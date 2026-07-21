@@ -147,3 +147,13 @@
   width: 26px;
   text-align: center;
 }
+
+.orders-link.active{
+  text-decoration: underline;
+}
+
+/* kalau:
+.orders-link.active(tanpa spasi)=> css akan mencari element yang memiliki class orders-link dan active.
+
+kalau .orders-link .active(pakai spasi)=> css akan mencari element yang memliki class orders-link, kemudian mencari child-nya atau lebih tepat descendant (keturunan) yang memliki class active
+ */

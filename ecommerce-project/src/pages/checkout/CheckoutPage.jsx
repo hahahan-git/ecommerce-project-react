@@ -1,22 +1,27 @@
 import './CheckoutHeader.css'
 import './CheckoutPage.css'
-import { Link } from 'react-router'
+import { NavLink } from 'react-router'
+import logo from '../../assets/images/logo.png'
+import mobileLogo from '../../assets/images/mobile-logo.png'
 
 function CheckoutHeader() {
   return (
     <>
+
+      <link rel="icon" href="cart-favicon.png" />
+      
       <div className="checkout-header">
         <div className="header-content">
           <div className="checkout-header-left-section">
-            <Link to="/">
-              <img className="logo" src="images/logo.png" />
-              <img className="mobile-logo" src="images/mobile-logo.png" />
-            </Link>
+            <NavLink to="/">
+              <img className="logo" src={logo} />
+              <img className="mobile-logo" src={mobileLogo} />
+            </NavLink>
           </div>
 
           <div className="checkout-header-middle-section">
-            Checkout (<Link className="return-to-home-link"
-              to="/">3 items</Link>)
+            Checkout (<NavLink className="return-to-home-link"
+              to="/">3 items</NavLink>)
           </div>
 
           <div className="checkout-header-right-section">

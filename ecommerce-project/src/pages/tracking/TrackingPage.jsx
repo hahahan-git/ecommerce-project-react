@@ -4,6 +4,8 @@ import { Header } from '../../components/Header'
 export function TrackingPage() {
   return (
     <>
+
+      <link rel="icon" href="tracking-favicon.png" />
       <title>Tracking Page</title>
 
       <Header />
