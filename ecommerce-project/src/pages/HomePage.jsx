@@ -1,52 +1,18 @@
 
-import './header.css'
 import './HomePage.css'
 //header images
-import logo from '.././assets/images/logo-white.png'
-import mobileLogo from '../assets/images/mobile-logo-white.png'
-import searchIcon from '../assets/images/icons/search-icon.png'
-import cartIcon from '../assets/images/icons/cart-icon.png'
+
 //Home or products images
 import sock from '../assets/images/products/athletic-cotton-socks-6-pairs.jpg'
 //anyway, if we put file on public folder, we can acces this file or folder from everywhere. misalnya images/ratings/blablabla, vite bakalan ngeliat folder "images" yang ada di public 
+import { Header } from './Header'
 
 export function HomePage() {
   return (
     <>
       <title>Home Page</title>
 
-      <div className="header">
-        <div className="left-section">
-          <a href="/" className="header-link">
-            <img
-              className="logo"
-              src={logo} />
-            <img
-              className="mobile-logo"
-              src={mobileLogo} />
-          </a>
-        </div>
-
-        <div className="middle-section">
-          <input className="search-bar" type="text" placeholder="Search" />
-
-          <button className="search-button">
-            <img className="search-icon" src={searchIcon} />
-          </button>
-        </div>
-
-        <div className="right-section">
-          <a className="orders-link header-link" href="/order">
-            <span className="orders-text">Orders</span>
-          </a>
-
-          <a className="cart-link header-link" href="/checkout">
-            <img className="cart-icon" src={cartIcon} />
-            <div className="cart-quantity">3</div>
-            <div className="cart-text">Cart</div>
-          </a>
-        </div>
-      </div>
+      <Header />
 
       <div className="home-page">
         <div className="products-grid">
