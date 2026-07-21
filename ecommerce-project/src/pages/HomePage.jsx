@@ -36,7 +36,7 @@ export function HomePage() {
         </div>
 
         <div className="right-section">
-          <a className="orders-link header-link" href="orders.html">
+          <a className="orders-link header-link" href="/order">
             <span className="orders-text">Orders</span>
           </a>
 
