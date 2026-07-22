@@ -2,11 +2,12 @@ import './HomePage.css'
 //header images
 
 //Home or products images
-import sock from '../assets/images/products/athletic-cotton-socks-6-pairs.jpg'
+// import sock from '../assets/images/products/athletic-cotton-socks-6-pairs.jpg'
 //anyway, if we put file on public folder, we can acces this file or folder from everywhere. misalnya images/ratings/blablabla, vite bakalan ngeliat folder "images" yang ada di public 
 //here, we use it for favicon(icon di tab), and others
 
 import { Header } from '../components/Header'
+import { products } from '../../starting-code/data/products'
 
 export function HomePage() {
   return (
@@ -19,7 +20,62 @@ export function HomePage() {
 
       <div className="home-page">
         <div className="products-grid">
-          <div className="product-container">
+          {products.map((product) => {
+            return (
+              <>
+                <div key={product.id} className="product-container">
+                  <div className="product-image-container">
+                    <img className="product-image"
+                      src={product.image} />
+                  </div>
+
+                  <div className="product-name limit-text-to-2-lines">
+                    {product.name}
+                  </div>
+
+                  <div className="product-rating-container">
+                    <img className="product-rating-stars"
+                      src={`images/ratings/rating-${product.rating.stars * 10}.png`} />
+                    <div className="product-rating-count link-primary">
+                      {product.rating.count}
+                    </div>
+                  </div>
+
+                  <div className="product-price">
+                    ${(product.priceCents / 100).toFixed(2)}
+                  </div>
+
+                  <div className="product-quantity-container">
+                    <select>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                    </select>
+                  </div>
+
+                  <div className="product-spacer"></div>
+
+                  <div className="added-to-cart">
+                    <img src="images/icons/checkmark.png" />
+                    Added
+                  </div>
+
+                  <button className="add-to-cart-button button-primary">
+                    Add to Cart
+                  </button>
+                </div>
+              </>
+            )
+          })}
+
+          {/* <div className="product-container">
             <div className="product-image-container">
               <img className="product-image"
                 src={sock} />
@@ -67,7 +123,6 @@ export function HomePage() {
               Add to Cart
             </button>
           </div>
-
           <div className="product-container">
             <div className="product-image-container">
               <img className="product-image"
@@ -116,7 +171,6 @@ export function HomePage() {
               Add to Cart
             </button>
           </div>
-
           <div className="product-container">
             <div className="product-image-container">
               <img className="product-image"
@@ -164,7 +218,7 @@ export function HomePage() {
             <button className="add-to-cart-button button-primary">
               Add to Cart
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
