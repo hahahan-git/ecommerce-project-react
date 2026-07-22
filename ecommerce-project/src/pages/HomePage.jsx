@@ -7,14 +7,20 @@ import './HomePage.css'
 //here, we use it for favicon(icon di tab), and others
 
 import { Header } from '../components/Header'
-import { products } from '../../starting-code/data/products'
+// import { products } from '../../starting-code/data/products'
 import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 
 export function HomePage() {
-  axios.get('http://localhost:3000/api/products').then((response) => {
-    console.log(response.data)
-  })
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/api/products')
+      .then((response) => {
+        setProducts(response.data)
+      })
+  }, [])
 
   return (
     <>
@@ -229,3 +235,15 @@ export function HomePage() {
 
   )
 }
+
+/*
+axios dipakai sebagai pengganti fetch()
+=> axios.get('url').then((response)=>{
+  response.data
+})
+  data sudah disimpan didalam response, sehingga bisa langsung dipanggil
+  
+  untuk mencegah axios dipanggil berkali-kali, kita gunakan useEffect,jadi axios hanya akan menjalankan request sekali setelah component dibuat.
+
+  untuk menyimpan response.data agar bisa dipakai diluar, kita menggunakan useState()
+*/
