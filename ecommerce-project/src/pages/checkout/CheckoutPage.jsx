@@ -1,41 +1,10 @@
-import './CheckoutHeader.css'
 import './CheckoutPage.css'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { NavLink } from 'react-router'
-import logo from '../../assets/images/logo.png'
-import mobileLogo from '../../assets/images/mobile-logo.png'
+import { CheckoutHeader } from './CheckoutHeader'
+import { PaymentSummary } from './PaymentSummary'
 import { formatMoney } from '../../utils/money'
 import dayjs from 'dayjs'
-
-function CheckoutHeader() {
-  return (
-    <>
-
-      <link rel="icon" href="cart-favicon.png" />
-
-      <div className="checkout-header">
-        <div className="header-content">
-          <div className="checkout-header-left-section">
-            <NavLink to="/">
-              <img className="logo" src={logo} />
-              <img className="mobile-logo" src={mobileLogo} />
-            </NavLink>
-          </div>
-
-          <div className="checkout-header-middle-section">
-            Checkout (<NavLink className="return-to-home-link"
-              to="/">3 items</NavLink>)
-          </div>
-
-          <div className="checkout-header-right-section">
-            <img src="images/icons/checkout-lock-icon.png" />
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
 
 export function CheckoutPage({ cart }) {
   const [deliveryOptions, setDeliveryOptions] = useState([]);
@@ -51,8 +20,6 @@ export function CheckoutPage({ cart }) {
       setPaymentSummary(response.data)
     })
 
-
-
   }, []);
 
 
@@ -60,7 +27,7 @@ export function CheckoutPage({ cart }) {
     <>
       <title>Checkout</title>
 
-      <CheckoutHeader />
+      <CheckoutHeader paymentSummary={paymentSummary} />
 
       <div className="checkout-page">
         <div className="page-title">Review your order</div>
@@ -134,46 +101,8 @@ export function CheckoutPage({ cart }) {
             })}
           </div>
 
-          <div className="payment-summary">
-            <div className="payment-summary-title">
-              Payment Summary
-            </div>
+          <PaymentSummary paymentSummary={paymentSummary} />
 
-
-            {paymentSummary && (
-              <>
-                <div className="payment-summary-row">
-                  <div>Items ({paymentSummary.totalItems}):</div>
-                  <div className="payment-summary-money">{formatMoney(paymentSummary.productCostCents)}</div>
-                </div>
-
-                <div className="payment-summary-row">
-                  <div>Shipping &amp; handling:</div>
-                  <div className="payment-summary-money">{formatMoney(paymentSummary.shippingCostCents)}</div>
-                </div>
-
-                <div className="payment-summary-row subtotal-row">
-                  <div>Total before tax:</div>
-                  <div className="payment-summary-money">{formatMoney(paymentSummary.totalCostBeforeTaxCents)}</div>
-                </div>
-
-                <div className="payment-summary-row">
-                  <div>Estimated tax (10%):</div>
-                  <div className="payment-summary-money">{formatMoney(paymentSummary.taxCents)}</div>
-                </div>
-
-                <div className="payment-summary-row total-row">
-                  <div>Order total:</div>
-                  <div className="payment-summary-money">{formatMoney(paymentSummary.totalCostCents)}</div>
-                </div>
-
-                <button className="place-order-button button-primary">
-                  Place your order
-                </button>
-
-              </>
-            )}
-          </div>
         </div>
       </div>
     </>
