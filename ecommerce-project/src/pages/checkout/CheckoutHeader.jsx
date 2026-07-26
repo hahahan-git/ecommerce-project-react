@@ -18,6 +18,7 @@ export function CheckoutHeader({ paymentSummary }) {
           </div>
 
           <div className="checkout-header-middle-section">
+
             Checkout (<NavLink className="return-to-home-link"
               to="/">{paymentSummary && paymentSummary.totalItems} items</NavLink>)
           </div>

@@ -17,16 +17,14 @@ export function CheckoutPage({ cart }) {
       response = await axios.get('/api/payment-summary');
       setPaymentSummary(response.data);
     }
-
     getCheckoutData();
   }, []);
-
 
   return (
     <>
       <title>Checkout</title>
 
-      <CheckoutHeader paymentSummary={paymentSummary} />
+      <CheckoutHeader paymentSummary={paymentSummary} cart={cart} />
 
       <div className="checkout-page">
         <div className="page-title">Review your order</div>
