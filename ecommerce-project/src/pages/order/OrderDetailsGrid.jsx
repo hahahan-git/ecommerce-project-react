@@ -2,9 +2,7 @@ import dayjs from 'dayjs'
 import { Fragment } from 'react';
 //Fragment = components
 
-export function OrderDetailsGrid({ order }) {
-
-  
+export function OrderDetailsGrid({ order, addToCart }) {
   return (
     <div className="order-details-grid">
       {order.products.map((product) => {
@@ -25,7 +23,7 @@ export function OrderDetailsGrid({ order }) {
               <div className="product-quantity">
                 Quantity: {product.quantity}
               </div>
-              <button className="buy-again-button button-primary">
+              <button className="buy-again-button button-primary" onClick={() => { addToCart(product.productId) }}>
                 <img className="buy-again-icon" src="images/icons/buy-again.png" />
                 <span className="buy-again-message">Add to Cart</span>
               </button>

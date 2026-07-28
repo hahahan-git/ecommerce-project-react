@@ -1,14 +1,21 @@
-import { NavLink } from 'react-router'
+import { NavLink } from 'react-router';
 // NavLink special feature is it knows which page is loaded.==>> you're on the Order page, it adds a class called "active" to the order link (className="order-link ....active")
-import './Header.css'
-import logo from '../assets/images/logo-white.png'
-import mobileLogo from '../assets/images/mobile-logo-white.png'
+import './Header.css';
+import logo from '../assets/images/logo-white.png';
+import mobileLogo from '../assets/images/mobile-logo-white.png';
+import { useState, } from 'react';
+import { useNavigate } from 'react-router';
 
 export function Header({ cart }) {
+  const navigate = useNavigate();
   let totalQuantity = 0;
-  cart.forEach((cartItem)=>{
+  cart.forEach((cartItem) => {
     totalQuantity += cartItem.quantity
   })
+  const [searchInput, setSearchInput] = useState('');
+  const doSearch = () => {
+    navigate(`/?search=${searchInput}`)
+  }
   return (
     <>
       <div className="header">
@@ -22,9 +29,11 @@ export function Header({ cart }) {
         </div>
 
         <div className="middle-section">
-          <input className="search-bar" type="text" placeholder="Search" />
+          <input className="search-bar" type="text" placeholder="Search" value={searchInput} onChange={(event) => {
+            setSearchInput(event.target.value)
+          }} />
 
-          <button className="search-button">
+          <button className="search-button" onClick={doSearch}>
             <img className="search-icon" src="images/icons/search-icon.png" />
           </button>
         </div>

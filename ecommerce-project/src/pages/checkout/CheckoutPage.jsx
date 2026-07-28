@@ -20,11 +20,10 @@ export function CheckoutPage({ cart, loadCart }) {
   }
 
   useEffect(() => {
-
     getDeliveryOptionsData();
   }, []);
-  useEffect(() => {
 
+  useEffect(() => {
     getPaymentSummaryData();
   }, [cart]);
 

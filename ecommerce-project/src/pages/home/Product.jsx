@@ -1,16 +1,10 @@
-import axios from 'axios'
 import { useState } from "react";
 import { formatMoney } from '../../utils/money'
 
-export function Product({ product, loadCart }) {
+export function Product({ product, addToCart }) {
   const [quantity, setQuantity] = useState(1);
-  const addToCart = async () => {
-    await axios.post('/api/cart-items', {
-      productId: product.id,
-      quantity
-    });
-    await loadCart()
-  }
+  const [added, setAdded] = useState(false);
+
   const selectQuantity = event => {
     const selectedValue = Number(event.target.value);
     // event.target.value jadikan number karena masih string
@@ -56,13 +50,19 @@ export function Product({ product, loadCart }) {
 
       <div className="product-spacer"></div>
 
-      <div className="added-to-cart" >
+      <div className="added-to-cart" style={{ opacity: added ? 1 : 0 }} >
         <img src="images/icons/checkmark.png" />
         Added
       </div>
 
       <button className="add-to-cart-button button-primary"
-        onClick={addToCart}>
+        onClick={() => {
+          addToCart(product.id, quantity);
+          setAdded(true)
+          setTimeout(() => {
+            setAdded(false)
+          }, 2000);
+        }}>
         Add to Cart
       </button>
     </div>
