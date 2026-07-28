@@ -27,6 +27,7 @@ export function HomePage({ cart, loadCart, addToCart }) {
       setProducts(response.data)
     };
     getProductData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   return (
