@@ -14,7 +14,7 @@ import { ProductsGrid } from './ProductsGrid';
 import { useSearchParams } from 'react-router';
 
 
-export function HomePage({ cart, loadCart, addToCart }) {
+export function HomePage({ cart, addToCart }) {
   const [searchParams] = useSearchParams();
   const search = searchParams.get('search');
   const [products, setProducts] = useState([]);
@@ -38,7 +38,7 @@ export function HomePage({ cart, loadCart, addToCart }) {
       <Header cart={cart} />
 
       <div className="home-page">
-        <ProductsGrid products={products} loadCart={loadCart} addToCart={addToCart} />
+        <ProductsGrid products={products} addToCart={addToCart} />
       </div>
     </>
   )
