@@ -1,6 +1,6 @@
-import { it, expect, describe, vi, beforeEach} from "vitest";
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { it, expect, describe, vi, beforeEach } from "vitest";
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 import { Product } from "./Product";
 
@@ -13,7 +13,7 @@ describe('Product Component', () => {
   let loadCart;//vi.fn() ==>> buat mocking, ini cuma function kosong, ga ngelakuin apa-apa
 
   let addToCart;
-
+  let user;
   beforeEach(() => {
     product = {
       id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -32,16 +32,18 @@ describe('Product Component', () => {
     addToCart = async (productId, quantity) => {
       await axios.post('/api/cart-items', {
         productId: productId,
-        quantity: quantity || 1
+        quantity: quantity
       });
       await loadCart()
     }
-  })
 
-  it('display product detail correctly', () => {
+    user = userEvent.setup();
 
     render(<Product product={product} addToCart={addToCart} />)
     //render buat munculin component nya
+  })
+
+  it('display product detail correctly', () => {
     //screen buat ngecek ada engganya
 
     expect(screen.getByTestId('product-image')).toHaveAttribute('src', 'images/products/athletic-cotton-socks-6-pairs.jpg')
@@ -56,18 +58,32 @@ describe('Product Component', () => {
   });
 
   it('adds a product to the cart', async () => {
-
-
-
-    render(<Product product={product} addToCart={addToCart} />)
-
-    const user = userEvent.setup();
     const addToCartBtn = screen.getByTestId('add-to-cart-button');
     await user.click(addToCartBtn);
 
     expect(axios.post).toHaveBeenCalledWith('/api/cart-items', {
       productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
       quantity: 1
+    })
+
+    expect(loadCart).toHaveBeenCalled();
+
+  })
+
+  it('can select a quantity', async () => {
+    const quantitySelector = screen.getByTestId('quantity-selector');
+
+    const addToCartBtn = screen.getByTestId('add-to-cart-button');
+
+    expect(quantitySelector).toHaveValue('1');
+
+    await user.selectOptions(quantitySelector, '3');
+    expect(quantitySelector).toHaveValue('3');
+
+    await user.click(addToCartBtn);
+    expect(axios.post).toHaveBeenCalledWith('/api/cart-items', {
+      productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
+      quantity: 3
     })
 
     expect(loadCart).toHaveBeenCalled();

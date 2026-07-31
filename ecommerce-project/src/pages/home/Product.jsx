@@ -12,10 +12,10 @@ export function Product({ product, addToCart }) {
   }
   return (
     <div className="product-container"
-    data-testId='product-container'>
+    data-testid='product-container'>
       <div className="product-image-container">
         <img className="product-image"
-          data-testId='product-image'
+          data-testid='product-image'
           src={product.image} />
       </div>
 
@@ -25,7 +25,7 @@ export function Product({ product, addToCart }) {
 
       <div className="product-rating-container">
         <img className="product-rating-stars"
-          data-testId='product-rating-stars'
+          data-testid='product-rating-stars'
           src={`images/ratings/rating-${product.rating.stars * 10}.png`} />
         <div className="product-rating-count link-primary">
           {product.rating.count}
@@ -37,7 +37,7 @@ export function Product({ product, addToCart }) {
       </div>
 
       <div className="product-quantity-container">
-        <select value={quantity} onChange={selectQuantity}>
+        <select value={quantity} onChange={selectQuantity} data-testid="quantity-selector">
           <option value='1'>1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -59,7 +59,7 @@ export function Product({ product, addToCart }) {
       </div>
 
       <button className="add-to-cart-button button-primary"
-      data-testId='add-to-cart-button'
+      data-testid='add-to-cart-button'
         onClick={() => {
           addToCart(product.id, quantity);
           setAdded(true)
